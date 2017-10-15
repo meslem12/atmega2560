@@ -5,6 +5,8 @@
  * Created on 11. Oktober 2017, 00:05
  */
 
+
+
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -18,7 +20,6 @@
 #include <avr/sleep.h>
 #include <util/delay.h>
 
-
 struct PORT {
   uint8_t const port;
   volatile uint8_t *portRow;
@@ -26,14 +27,21 @@ struct PORT {
 
 };
 
-void sendChar(char *ch) {
-  while ((UCSR0A & (1 << UDRE0)) == 0);
-  UDR0 = *ch;
+void sendCharUART(char data) {
+
+  while (!(UCSR0A & (1 << UDRE0)));
+  UDR0 = data;
+
 }
 
-void sendCharField(char *field, int size) {
+char getCharUART() {
+  while (!(UCSR0A & (1 << RXC0)));
+  return UDR0;
+}
+
+void sendCharFieldUART(char *field, int size) {
   for (int i = 0; i < size; i++)
-    sendChar(&field[i]);
+    sendCharUART(field[i]);
 }
 
 void toggleLED(const PORT *led) {
@@ -59,12 +67,12 @@ void setInput(const PORT *led) {
 void flashLED(const PORT *led) {
 
 
-  for (int i = 0; i < 50; i++) {
+  for (int i = 0; i < 25; i++) {
     toggleLED(led);
     _delay_ms(50);
   }
 
-  turnOnLED(led);
+  turnOffLED(led);
 
 }
 
@@ -83,8 +91,8 @@ void blink() {
 
 void uart() {
   //Set Baudrate to 1000000 (1 Mbit)
-  if (U2X0 == 1)
-    UBRR0 = 0;
+
+  UBRR0 = 0;
 
 
 
@@ -113,12 +121,12 @@ void setSleepMode() {
 }
 
 void goToSleep() {
-  
+
   SMCR |= (1 << SE);
   sleep_enable();
-  
+
   sleep_cpu();
-  
+
   sleep_disable();
   SMCR &= ~(1 << SE);
 }
@@ -140,12 +148,8 @@ ISR(INT0_vect) {
   flag1 = true;
 }
 
-/*
- * 
- */
-int main() {
-  //blink();
-  uart();
+void interruptAndSleep() {
+
 
 
   EICRA |= (1 << ISC01);
@@ -169,7 +173,7 @@ int main() {
   while (true) {
 
     char str[20] = "Start\n\r";
-    sendCharField(str, sizeof (str) / sizeof (char));
+    sendCharFieldUART(str, sizeof (str) / sizeof (char));
 
 
     goToSleep();
@@ -185,14 +189,107 @@ int main() {
 
     _delay_ms(500);
 
-  };
+  }
+
+}
+
+void setUpPWM() {
+  TCCR0B |= (1 << CS00);
+  TCCR0A |= (1 << COM0A1) | (1 << WGM01) | (1 << WGM00);
+}
+
+void PWM() {
+
+  setUpPWM();
+
+  OCR0A = 0;
+
+  while (1) {
+    for (int i = 10; i < 200; i++) {
+      OCR0A = i;
+      _delay_ms(20);
+    }
+    for (int i = 200; i > 10; i--) {
+      OCR0A = i;
+      _delay_ms(20);
+    }
+
+  }
+
+}
+
+/*
+ * 
+ */
+int main() {
+
+  //uart();
+  const PORT led1 = {PB7, &PORTB, &DDRB};
+  setOutput(&led1);
+  flashLED(&led1);
+
+  //UCSR0A |= (1<<U2X0);
+  //UCSR0B |= (1<<RXEN0)|(1<<TXEN0);
+  UBRR0 = 0b000000000000;
+
+  //_delay_ms(1000);
+
+  char *start = "Start\n\r";
+  sendCharFieldUART(start, 7);
+
+  while (1) {
+
+    char tmp = '-';
+    sendCharUART(tmp);
+
+    char input = getCharUART();
+
+    flashLED(&led1);
 
 
 
+    //    sendCharUART('[');
+    //   sendCharUART(input);
+    //   sendCharUART(']');
+    //   sendCharUART('\n');
+    //   sendCharUART('\r');
+    //   
+
+    char output[6];
+    output[0] = '[';
+    output[1] = input;
+    output[2] = ']';
+    output[3] = '\n';
+    output[4] = '\r';
+
+    sendCharUART(output[0]);
+    flashLED(&led1);
+    sendCharUART(output[1]);
+    flashLED(&led1);
+    sendCharUART(output[2]);
+    flashLED(&led1);
+    sendCharUART(output[3]);
+    flashLED(&led1);
+    sendCharUART(output[4]);
+    flashLED(&led1);
 
 
 
+    //    for(int i=0; i<6; i++)
+    //    {
+    //      sendCharUART(output[i]);
+    //      sendCharUART('\n');
+    //      sendCharUART('\r');
+    //    }
+    //    
 
-  return (EXIT_SUCCESS);
+
+    //sendCharFieldUART(output, 5);
+
+
+  }
+
+
+  return (0);
 }
 
