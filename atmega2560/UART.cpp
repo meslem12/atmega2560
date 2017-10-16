@@ -12,9 +12,7 @@ UART::UART() {
   
   cli();
   
-//  DDRE |= (1<<PE1);
-//  DDRE &= ~(1<<PE0);
-//  
+ 
   //baud = 57600
   UBRR0H = (uint8_t) (16>>8);
   UBRR0L = (uint8_t) (16 & 0x0ff);
@@ -25,7 +23,7 @@ UART::UART() {
   UCSR0B &= ~((1<<RXCIE0) | (1<<TXCIE0) | (1<<UDRIE0));
   //enable receiver/transmitter
   UCSR0B |= (1 << RXEN0) | (1 << TXEN0);
-  //8bit and 2 stop bits
+  //8bit and 1 stop bits
   UCSR0B &= ~(1<<UCSZ02);
   UCSR0C |= (1<<UCSZ01) | (1<<UCSZ00);
   //no parity, asynchronous
