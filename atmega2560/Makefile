@@ -25,7 +25,7 @@ SRC =
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
-CPPSRC = main.cpp
+CPPSRC = main.cpp UART.cpp Port.cpp
 
 
 # List Assembler source files here.

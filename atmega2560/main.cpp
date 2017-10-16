@@ -9,6 +9,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include <avr/io.h>
 #include <avr/interrupt.h>
@@ -20,29 +21,15 @@
 #include <avr/sleep.h>
 #include <util/delay.h>
 
+#include "UART.h"
+#include "Port.h"
+
 struct PORT {
-  uint8_t const port;
+  const uint8_t port;
   volatile uint8_t *portRow;
   volatile uint8_t *ddr;
 
 };
-
-void sendCharUART(char data) {
-
-  while (!(UCSR0A & (1 << UDRE0)));
-  UDR0 = data;
-
-}
-
-char getCharUART() {
-  while (!(UCSR0A & (1 << RXC0)));
-  return UDR0;
-}
-
-void sendCharFieldUART(char *field, int size) {
-  for (int i = 0; i < size; i++)
-    sendCharUART(field[i]);
-}
 
 void toggleLED(const PORT *led) {
   *led->portRow ^= 1 << led->port;
@@ -89,32 +76,6 @@ void blink() {
 
 }
 
-void uart() {
-  //Set Baudrate to 1000000 (1 Mbit)
-
-  UBRR0 = 0;
-
-
-
-  //  char lol[4] = "LoL";
-  //
-  //  char str = 'G';
-  //  char str2 = 'O';
-  //
-  //  sendChar(&str);
-  //  sendChar(&str);
-  //
-  //  sendChar(&str);
-  //  sendChar(&str);
-  //
-  //
-  //  sendCharField(lol, sizeof (lol) / sizeof (char));
-
-
-  //char nl = '\n';
-  //sendChar(&nl);
-}
-
 void setSleepMode() {
   SMCR |= SLEEP_MODE_PWR_DOWN;
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -134,7 +95,6 @@ void goToSleep() {
 bool isHIGH(const PORT *input) {
 
 
-
   if ((PINB & (1 << PINB5)) == (1 << PINB5))
     return true;
   else
@@ -144,9 +104,9 @@ bool isHIGH(const PORT *input) {
 
 volatile bool flag1;
 
-ISR(INT0_vect) {
-  flag1 = true;
-}
+//ISR(INT0_vect) {
+//  flag1 = true;
+//}
 
 void interruptAndSleep() {
 
@@ -169,27 +129,6 @@ void interruptAndSleep() {
 
 
   sei();
-
-  while (true) {
-
-    char str[20] = "Start\n\r";
-    sendCharFieldUART(str, sizeof (str) / sizeof (char));
-
-
-    goToSleep();
-
-    if (flag1) {
-      blink();
-
-
-      cli();
-      flag1 = false;
-      sei();
-    }
-
-    _delay_ms(500);
-
-  }
 
 }
 
@@ -223,71 +162,95 @@ void PWM() {
  */
 int main() {
 
-  //uart();
-  const PORT led1 = {PB7, &PORTB, &DDRB};
-  setOutput(&led1);
-  flashLED(&led1);
-
-  //UCSR0A |= (1<<U2X0);
-  //UCSR0B |= (1<<RXEN0)|(1<<TXEN0);
-  UBRR0 = 0b000000000000;
-
-  //_delay_ms(1000);
-
-  char *start = "Start\n\r";
-  sendCharFieldUART(start, 7);
-
-  while (1) {
-
-    char tmp = '-';
-    sendCharUART(tmp);
-
-    char input = getCharUART();
-
-    flashLED(&led1);
-
-
-
-    //    sendCharUART('[');
-    //   sendCharUART(input);
-    //   sendCharUART(']');
-    //   sendCharUART('\n');
-    //   sendCharUART('\r');
-    //   
-
-    char output[6];
-    output[0] = '[';
-    output[1] = input;
-    output[2] = ']';
-    output[3] = '\n';
-    output[4] = '\r';
-
-    sendCharUART(output[0]);
-    flashLED(&led1);
-    sendCharUART(output[1]);
-    flashLED(&led1);
-    sendCharUART(output[2]);
-    flashLED(&led1);
-    sendCharUART(output[3]);
-    flashLED(&led1);
-    sendCharUART(output[4]);
-    flashLED(&led1);
-
-
-
-    //    for(int i=0; i<6; i++)
-    //    {
-    //      sendCharUART(output[i]);
-    //      sendCharUART('\n');
-    //      sendCharUART('\r');
-    //    }
-    //    
-
-
-    //sendCharFieldUART(output, 5);
-
-
+  UART uart;
+  Port led1(PB7, &PORTB, &DDRB, &PINB);
+  
+  uart.sendChar("\n\r");
+  
+  while(1)
+  {
+    
+    char input[2] = {uart.getChar()};
+    
+    char str1[6] = "[";
+    strcat(str1,input);
+    strcat(str1, "]\n\r");
+    
+    uart.sendChar(str1);
   }
+  
+  
+  
+//  
+//  
+//  const PORT led1 = {PB7, &PORTB, &DDRB};
+//  setOutput(&led1);
+//  flashLED(&led1);
+//
+//  //UCSR0A |= (1<<U2X0);
+//  //UCSR0B |= (1<<RXEN0)|(1<<TXEN0);
+//  UBRR0 = 0b000000000000;
+//
+//  //_delay_ms(1000);
+//
+//  char *start = "Start\n\r";
+//  sendCharFieldUART(start, 7);
+//
+//  while (1) {
+//
+//    
+//    
+//    
+//    
+//    char tmp = '-';
+//    sendCharUART(tmp);
+//
+//    char input = getCharUART();
+//
+//    flashLED(&led1);
+//
+//
+//
+//    //    sendCharUART('[');
+//    //   sendCharUART(input);
+//    //   sendCharUART(']');
+//    //   sendCharUART('\n');
+//    //   sendCharUART('\r');
+//    //   
+//
+//    char output[6];
+//    output[0] = '[';
+//    output[1] = input;
+//    output[2] = ']';
+//    output[3] = '\n';
+//    output[4] = '\r';
+//
+//    sendCharUART(output[0]);
+//    flashLED(&led1);
+//    sendCharUART(output[1]);
+//    flashLED(&led1);
+//    sendCharUART(output[2]);
+//    flashLED(&led1);
+//    sendCharUART(output[3]);
+//    flashLED(&led1);
+//    sendCharUART(output[4]);
+//    flashLED(&led1);
+//
+//
+//
+//    //    for(int i=0; i<6; i++)
+//    //    {
+//    //      sendCharUART(output[i]);
+//    //      sendCharUART('\n');
+//    //      sendCharUART('\r');
+//    //    }
+//    //    
+//
+//
+//    //sendCharFieldUART(output, 5);
+//
+//
+//  }
 
 
   return (0);

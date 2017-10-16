@@ -35,6 +35,8 @@ OBJECTDIR=${CND_BUILDDIR}/${CND_CONF}/${CND_PLATFORM}
 
 # Object Files
 OBJECTFILES= \
+	${OBJECTDIR}/Port.o \
+	${OBJECTDIR}/UART.o \
 	${OBJECTDIR}/main.o
 
 
@@ -61,6 +63,16 @@ LDLIBSOPTIONS=
 ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/atmega2560.exe: ${OBJECTFILES}
 	${MKDIR} -p ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}
 	${LINK.cc} -o ${CND_DISTDIR}/${CND_CONF}/${CND_PLATFORM}/atmega2560 ${OBJECTFILES} ${LDLIBSOPTIONS}
+
+${OBJECTDIR}/Port.o: Port.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -D__AVR_ATmega2560__ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/Port.o Port.cpp
+
+${OBJECTDIR}/UART.o: UART.cpp
+	${MKDIR} -p ${OBJECTDIR}
+	${RM} "$@.d"
+	$(COMPILE.cc) -g -D__AVR_ATmega2560__ -MMD -MP -MF "$@.d" -o ${OBJECTDIR}/UART.o UART.cpp
 
 ${OBJECTDIR}/main.o: main.cpp
 	${MKDIR} -p ${OBJECTDIR}
