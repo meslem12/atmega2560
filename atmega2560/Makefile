@@ -2,8 +2,11 @@
 MCU = atmega2560
 
 
+#avrdude -p m2560 -c stk500v2 -P COM4 -U flash:w:"C:\Users\Levin\Documents\NetBeansProjects\atmega2560\atmega2560\main.hex":i
+
 # Processor frequency.
-F_CPU = 8000000
+#F_CPU = 8000000
+F_CPU = 16000000
 
 
 # Output format. (can be srec, ihex, binary)
@@ -211,7 +214,7 @@ LDFLAGS += $(PRINTF_LIB) $(SCANF_LIB) $(MATH_LIB)
 AVRDUDE_PROGRAMMER = stk500v2
 
 # com1 = serial port. Use lpt1 to connect to parallel port.
-AVRDUDE_PORT = /dev/ttyACM0    # programmer connected to serial device
+AVRDUDE_PORT = COM4    # programmer connected to serial device
 
 AVRDUDE_WRITE_FLASH = -U flash:w:$(TARGET).hex
 #AVRDUDE_WRITE_EEPROM = -U eeprom:w:$(TARGET).eep

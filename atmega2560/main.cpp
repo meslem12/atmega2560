@@ -161,37 +161,39 @@ void PWM() {
  * 
  */
 int main() {
-
-  UART uart;
-  Port led1(PB7, &PORTB, &DDRB, &PINB);
   
-  uart.sendChar("\n\r");
+  
+  UART uart;
+  //Port led1(PB7, &PORTB, &DDRB, &PINB);
+  //sei();
+  
+  
+  uart.sendChar("Programm Start");
+  
+  const PORT led1 = {PB7, &PORTB, &DDRB};
+  setOutput(&led1);
+  flashLED(&led1);
   
   while(1)
   {
     
-    char input[2] = {uart.getChar()};
+    char input = {uart.getChar()};
     
-    char str1[6] = "[";
-    strcat(str1,input);
-    strcat(str1, "]\n\r");
+//    char str1[6] = "[";
+//    strcat(str1,input);
+//    strcat(str1, "]\n\r");
     
-    uart.sendChar(str1);
+    uart.sendChar(input);
   }
   
   
   
-//  
-//  
-//  const PORT led1 = {PB7, &PORTB, &DDRB};
-//  setOutput(&led1);
-//  flashLED(&led1);
-//
-//  //UCSR0A |= (1<<U2X0);
-//  //UCSR0B |= (1<<RXEN0)|(1<<TXEN0);
-//  UBRR0 = 0b000000000000;
-//
-//  //_delay_ms(1000);
+  
+  
+  
+  
+  
+  
 //
 //  char *start = "Start\n\r";
 //  sendCharFieldUART(start, 7);
