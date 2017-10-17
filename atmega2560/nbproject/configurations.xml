@@ -39,11 +39,6 @@
         <rebuildPropChanged>false</rebuildPropChanged>
       </toolsSet>
       <compileType>
-        <cTool>
-          <preprocessorList>
-            <Elem>__AVR_ATmega2560__</Elem>
-          </preprocessorList>
-        </cTool>
         <ccTool>
           <preprocessorList>
             <Elem>__AVR_ATmega2560__</Elem>

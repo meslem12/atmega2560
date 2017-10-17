@@ -1,6 +1,11 @@
 # MCU name
 MCU = atmega2560
 
+MMC_MODEL = atmega2560
+MMC_MODEL_AVRDURE = m2560
+PROGRAMMER = stk500v2
+PORT = COM4
+AVR_DUDE = avrdude
 
 #avrdude -p m2560 -c stk500v2 -P COM4 -U flash:w:"C:\Users\Levin\Documents\NetBeansProjects\atmega2560\atmega2560\main.hex":i
 
@@ -28,8 +33,8 @@ SRC =
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
-CPPSRC = main.cpp UART.cpp Port.cpp
-
+#CPPSRC = main.cpp UART.cpp Port.cpp
+CPPSRC = $(wildcard *.c)
 
 # List Assembler source files here.
 #     Make them always end in a capital .S.  Files ending in a lowercase .s
@@ -350,6 +355,9 @@ LIBNAME=lib$(TARGET).a
 lib: $(LIBNAME)
 
 
+# Upload with AVRDUDE
+upload:
+	${AVR_DUDE} -v -p${MMC_MODEL_AVRDURE} -c${PROGRAMMER} -P${PORT} -Uflash:w:${TARGET}.hex:i
 
 # Eye candy.
 # AVR Studio 3.x does not check make's exit code but relies on
