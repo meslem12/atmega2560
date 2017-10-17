@@ -33,8 +33,9 @@ SRC =
 
 
 # List C++ source files here. (C dependencies are automatically generated.)
-#CPPSRC = main.cpp UART.cpp Port.cpp
-CPPSRC = $(wildcard *.c)
+CPPSRC = main.cpp UART.cpp Port.cpp
+#CPPSRC = $(wildcard *.c)
+#CPPSRC := $(shell find $(SOURCEDIR) -name '*.c')
 
 # List Assembler source files here.
 #     Make them always end in a capital .S.  Files ending in a lowercase .s

@@ -16,17 +16,30 @@
 
 #include <stdint.h>
 #include <avr/io.h>
-
+#include <util/delay.h>
 
 class Port {
-  
 public:
-  Port();
-  Port(uint8_t Pxn, volatile uint8_t *PORTx, volatile uint8_t *DDRx, volatile uint8_t *PINx);
+  Port(const uint8_t Pxn, const uint8_t PINxn, volatile uint8_t *PORTx, volatile uint8_t *DDRx, volatile uint8_t *PINx);
   Port(const Port& orig);
   ~Port();
-private:
+  void setInput();
+  void setOutput();
+  void setHIGH();
+  void setLOW();
+  void toggle();
+  bool isHIGH();
+  void flash(const int ms);
 
+private:
+  const uint8_t Pxn;
+  const uint8_t PINxn;
+  volatile uint8_t *PORTx;
+  volatile uint8_t *DDRx;
+  volatile uint8_t *PINx;
+
+  
+  
 };
 
 #endif /* PORT_H */

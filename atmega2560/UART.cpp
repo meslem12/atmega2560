@@ -41,6 +41,7 @@ UART::UART(const UART& orig) {
 UART::~UART() {
 }
 
+
 void UART::sendChar(const char data) {
   while (!(UCSR0A & (1 << UDRE0)));
   UDR0 = data;
