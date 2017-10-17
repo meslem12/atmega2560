@@ -5,7 +5,9 @@
                    displayName="Header Files"
                    projectFiles="true">
       <itemPath>Port.h</itemPath>
+      <itemPath>Twi.h</itemPath>
       <itemPath>UART.h</itemPath>
+      <itemPath>jsmn.h</itemPath>
     </logicalFolder>
     <logicalFolder name="ResourceFiles"
                    displayName="Resource Files"
@@ -15,7 +17,9 @@
                    displayName="Source Files"
                    projectFiles="true">
       <itemPath>Port.cpp</itemPath>
+      <itemPath>Twi.cpp</itemPath>
       <itemPath>UART.cpp</itemPath>
+      <itemPath>jsmn.cpp</itemPath>
       <itemPath>main.cpp</itemPath>
     </logicalFolder>
     <logicalFolder name="TestFiles"
@@ -49,9 +53,17 @@
       </item>
       <item path="Port.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Twi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Twi.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="UART.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="UART.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="jsmn.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="jsmn.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
@@ -80,9 +92,17 @@
       </item>
       <item path="Port.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="Twi.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="Twi.h" ex="false" tool="3" flavor2="0">
+      </item>
       <item path="UART.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="UART.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="jsmn.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="jsmn.h" ex="false" tool="3" flavor2="0">
       </item>
       <item path="main.cpp" ex="false" tool="1" flavor2="0">
       </item>
