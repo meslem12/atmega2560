@@ -24,9 +24,6 @@
 #include "UART.h"
 #include "Port.h"
 
-
-
-
 void setSleepMode() {
   SMCR |= SLEEP_MODE_PWR_DOWN;
   set_sleep_mode(SLEEP_MODE_PWR_DOWN);
@@ -57,7 +54,7 @@ void interruptAndSleep() {
   EICRA |= (1 << ISC01);
   EICRA &= ~(1 << ISC00);
   EIMSK |= (1 << INT0);
- 
+
   sei();
 
 }
@@ -87,33 +84,76 @@ void PWM() {
 
 }
 
+void initTimer() {
+  //set as CTC
+  TCCR0A |= 1 << WGM01;
+  //set prescale 64
+  TCCR0B |= (1 << CS00) | (1 << CS01);
+  //set TOP to 124
+  OCR0A = 249;
+  //enable interrupt
+  TIMSK0 |= 1 << OCIE0A;
+
+}
+
+
+
+int timerFlag = 0;
+int ms = 0;
+int s = 0;
+int min = 0;
+
+ISR(TIMER0_COMPA_vect) {
+  timerFlag++;
+}
 
 /*
  * 
  */
 int main() {
-  
+
   UART uart;
   Port led_1(PB7, PINB7, &PORTB, &DDRB, &PINB);
-  
-  uart.sendChar("Program start\n");
-  _delay_ms(1000);
-  
+  initTimer();
   led_1.setOutput();
   led_1.setLOW();
-  
-  
-  while(1)
-  {
-    
-    char input = {uart.getChar()};
 
-    uart.sendChar(input);
-    uart.sendChar('\n');
+  uart.sendChar("Program start\n");
+
+
+
+  sei();
+
+
+  while (1) {
+
+    cli();
+    while (timerFlag > 0) {
+      timerFlag--;
+      sei();
+      ms++;
+      if (ms >= 1000) {
+        ms = 0;
+        s++;
+      }
+      if (s >= 60) {
+        s = 0;
+        min++;
+      }
+      if (min >= 100) {
+        min = 0;
+      }
+      cli();
+    }
+    sei();
+
+    char time[30];
+
+    snprintf(time, sizeof (time) / sizeof(char), "%02d - %02d - %03d\r", min, s, ms);
+    uart.sendChar(time);
   }
   
-  
-  
+
   return (0);
 }
 
