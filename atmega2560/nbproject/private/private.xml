@@ -7,12 +7,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="test">
-            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/atmega2560/Port.cpp</file>
-            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/atmega2560/Makefile</file>
-            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/atmega2560/Port.h</file>
-            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/atmega2560/UART.h</file>
-            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/atmega2560/UART.cpp</file>
-            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/atmega2560/main.cpp</file>
+            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/Port.h</file>
+            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/Makefile</file>
+            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/UART.cpp</file>
+            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/Port.cpp</file>
+            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/UART.h</file>
+            <file>file:/C:/Users/Levin/Documents/NetBeansProjects/atmega2560/atmega2560/main.cpp</file>
         </group>
     </open-files>
 </project-private>

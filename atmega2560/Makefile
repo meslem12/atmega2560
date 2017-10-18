@@ -7,7 +7,20 @@ PROGRAMMER = stk500v2
 PORT = COM4
 AVR_DUDE = avrdude
 
+#PROGRAMMER = usbasp
+#PORT = lpt1
+
+
 #avrdude -p m2560 -c stk500v2 -P COM4 -U flash:w:"C:\Users\Levin\Documents\NetBeansProjects\atmega2560\atmega2560\main.hex":i
+
+# List C source files here. (C dependencies are automatically generated.)
+SRC = 
+
+
+# List C++ source files here. (C dependencies are automatically generated.)
+CPPSRC = main.cpp UART.cpp Port.cpp jsmn.cpp
+#CPPSRC = $(wildcard *.c)
+#CPPSRC := $(shell find $(SOURCEDIR) -name '*.c')
 
 # Processor frequency.
 #F_CPU = 8000000
@@ -28,14 +41,6 @@ TARGET = main
 OBJDIR = .
 
 
-# List C source files here. (C dependencies are automatically generated.)
-SRC = 
-
-
-# List C++ source files here. (C dependencies are automatically generated.)
-CPPSRC = main.cpp UART.cpp Port.cpp
-#CPPSRC = $(wildcard *.c)
-#CPPSRC := $(shell find $(SOURCEDIR) -name '*.c')
 
 # List Assembler source files here.
 #     Make them always end in a capital .S.  Files ending in a lowercase .s

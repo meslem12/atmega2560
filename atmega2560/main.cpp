@@ -23,6 +23,7 @@
 
 #include "UART.h"
 #include "Port.h"
+#include "jsmn.h"
 
 void setSleepMode() {
   SMCR |= SLEEP_MODE_PWR_DOWN;
@@ -118,42 +119,54 @@ int main() {
   led_1.setOutput();
   led_1.setLOW();
 
-  uart.sendChar("Program start\n");
+  jsmn_parser parser;
+  jsmn_init(&parser);
 
+  jsmntok_t tokens[256];
+  const char *js;
+  js = "{\"glossary\":{\"title\":\"example glossary\",\"GlossDiv\":{\"title\":\"S\",\"GlossList\":{\"GlossEntry\":{\"ID\":\"SGML\",\"SortAs\":\"SGML\",\"GlossTerm\":\"Standard Generalized Markup Language\",\"Acronym\":\"SGML\",\"Abbrev\":\"ISO 8879:1986\",\"GlossDef\":{\"para\":\"A meta-markup language, used to create markup languages such as DocBook.\",\"GlossSeeAlso\":[\"GML\",\"XML\"]},\"GlossSee\":\"markup\"}}}}}";
 
-
-  sei();
-
-
-  while (1) {
-
-    cli();
-    while (timerFlag > 0) {
-      timerFlag--;
-      sei();
-      ms++;
-      if (ms >= 1000) {
-        ms = 0;
-        s++;
-      }
-      if (s >= 60) {
-        s = 0;
-        min++;
-      }
-      if (min >= 100) {
-        min = 0;
-      }
-      cli();
-    }
-    sei();
-
-    char time[30];
-
-    snprintf(time, sizeof (time) / sizeof(char), "%02d - %02d - %03d\r", min, s, ms);
-    uart.sendChar(time);
-  }
+  jsmn_parse(&parser, js, strlen(js), tokens, 256);
+  
+  
+  
   
 
-  return (0);
+uart.sendChar("Program start\n");
+
+
+sei();
+
+
+while (1) {
+
+  cli();
+  while (timerFlag > 0) {
+    timerFlag--;
+    sei();
+    ms++;
+    if (ms >= 1000) {
+      ms = 0;
+      s++;
+    }
+    if (s >= 60) {
+      s = 0;
+      min++;
+    }
+    if (min >= 100) {
+      min = 0;
+    }
+    cli();
+  }
+  sei();
+
+  char time[30];
+
+  snprintf(time, sizeof (time) / sizeof (char), "%02d - %02d - %03d\r", min, s, ms);
+  uart.sendChar(time);
+}
+
+
+return (0);
 }
 
